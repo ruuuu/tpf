@@ -17,7 +17,7 @@ module.exports = {
     },
     testMatch: ['**/specs/*.spec.*'], // ['**/specs/*.spec.*']
     globals: {
-        testTimeout: 100000,
+        testTimeout: 200000, //200с=3мин
     },
     verbose: true,
     setupFilesAfterEnv: ["jest-allure/dist/setup"]

@@ -9,7 +9,7 @@ module.exports = {
     },
     testMatch: ['**/specs/*.spec.*'],
     globals: {
-        testTimeout: 100000,
+        testTimeout: 200000,
     },
     verbose: true,
 };
