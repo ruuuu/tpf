@@ -23,9 +23,10 @@ afterEach(async() => {
 
 
 
-describe('Create taxpayer tests', () => {
+describe('Набор тестов для создания НП', () => {
 
-    it.only('Создание НП-10 значный', async() => {
+
+    it('Создание НП-10 значный', async() => {
 
         const email = await app().data()[i].email;
         const password = await app().data()[i].password;
@@ -58,26 +59,10 @@ describe('Create taxpayer tests', () => {
         // Статус:  
         const cellStatus = await app().locatorPage().getLocator(await app().createTaxpayerPage().getLocatorCellStatusInRequestsTab()); // в гриде, на вкладке Зарпосы, ячейка где хранится Статус
         const cellStatusText = await app().locatorPage().getElement(page, cellStatus);
-
-
-        let timerId = setInterval(() => {
-
-            if (cellStatusText !== 'Подтвержден') console.log(cellStatusText);
-
-        }, 10000); // через каждые 10 секунд будет проверять условие
-        console.log('timerId ', timerId);
-
-        // остановить проверку через 50 секунд(50сек/10сек) = 5 раз вызовется фукнция проверки
-        setTimeout(() => {
-            clearInterval(timerId);
-            console.log('stop');
-        }, 50000);
-
-        console.log('cellStatusText in test: ', cellStatusText);
-        // expect(cellStatusText)
-        //     .to
-        //     .have
-        //     .string('Подтвержден'); //   Обработка   
+        expect(cellStatusText)
+            .to
+            .have
+            .string('Подтвержден'); // 
 
     });
 
@@ -146,7 +131,7 @@ describe('Create taxpayer tests', () => {
 
 });
 
-describe('Search && filter tests', () => {
+describe('Набор тестов на поиск и фильтрацию данных НП', () => {
 
     it('Поиск по ИНН на вкладке НП', async() => {
 

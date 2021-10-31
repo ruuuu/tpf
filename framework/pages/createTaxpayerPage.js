@@ -1,81 +1,71 @@
-const LocatorPage = function() {
-    this.getLocator = async function(locator) {
-        return locator;
+const CreateTaxpayerPage = function() {
+
+    const createTaxpayerButton = ('text="Создать карточку"'); // кнопка "Создать карточку"    
+    const innField = ('[data-field-name = "inn"]'); // поле ввода ИНН
+    const checkButton = ('text="Найти"'); //  кнопка  Найти(check) 
+    const prodolgitButton = ('text="Продолжить"'); // кнопка Продолжить
+    const queryTab = ('text="Заявки на получение сведений"'); // вкладка  Запросы
+    const innTab = ('text="Налогоплательщики"'); // вкладка Налогоплательщики
+
+
+
+
+    this.createTaxpayer = async function(page, inn) {
+
+        await page.click(createTaxpayerButton);
+
+        await page.fill(innField, inn);
+
+        await page.click(checkButton);
+
+        await page.click(prodolgitButton);
+
+        await page.click(queryTab);
+
+        const cellStatusLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(2)>div>div');
+
+        while(await page.textContent(cellStatusLocator) !== 'Подтвержден'){
+            await page.waitForTimeout(30000); // 30 сек ждем 
+            if(await page.textContent(cellStatusLocator) === 'Подтвержден') break;
+        }
+
+        
+  
     };
 
-    this.getElement = async function(page, locator) {
-        await page
-            .waitForSelector(locator)
-            .then(() => console.log("Загрузился элемент"));
 
-        const elemText = await page.textContent(locator);
-        return elemText;
+
+
+    this.createTaxpayerAlreadyExist = async function(page, inn) { // Создаем НП, котрый уже есть в системе
+
+        await page.click(createTaxpayerButton);
+
+        await page.fill(innField, inn);
+
+        await page.click(checkButton);
+
+        await page.click(prodolgitButton);
+
+        await page.click(prodolgitButton);
+
     };
-};
 
-export { LocatorPage };
-await page.click(checkButton);
+    this.getLocatorCellActivityInRequestsTab = async function() {
+        const activityLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(3)>div');
+        return activityLocator;
+    }
 
-await page.click(prodolgitButton);
+    this.getLocatorCellStatusInRequestsTab = async function() { // локатор для статуса
+        const statusLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(2)>div>div');
+        return statusLocator;
+    }
 
-await page.click(queryTab);
-
-await page.click(innTab);
-
-await page.click(queryTab);
-
-const statusLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(2)>div>div');
-
-
-let timerId = setInterval(() => {
-
-    if (await page.textContent(locator) !== 'Подтвержден') console.log(cellStatusText);
-
-}, 10000); // через каждые 10 секунд будет проверять условие
-console.log('timerId ', timerId);
-
-// остановить проверку через 50 секунд(50сек/10сек) = 5 раз вызовется фукнция проверки
-setTimeout(() => {
-    clearInterval(timerId);
-    console.log('stop');
-}, 50000);
-
-
+    this.getLocatorForRedMessage = async function() {
+        const redMessageLocator = ('text="По данному ИНН уже создана карточка НП"');
+        return redMessageLocator;
+    }
 
 
 };
 
-
-this.createTaxpayerAlreadyExist = async function(page, inn) { // Создаем НП, котрый уже есть в системе
-
-    await page.click(createTaxpayerButton);
-
-    await page.fill(innField, inn);
-
-    await page.click(checkButton);
-
-    await page.click(prodolgitButton);
-
-    await page.click(prodolgitButton);
-
-};
-
-this.getLocatorCellActivityInRequestsTab = async function() {
-    const activityLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(3)>div');
-    return activityLocator;
-}
-
-this.getLocatorCellStatusInRequestsTab = async function() { // локатор для статуса
-    const statusLocator = ('table>tbody>tr:nth-child(2)>td:nth-child(2)>div>div');
-    return statusLocator;
-}
-
-this.getLocatorForRedMessage = async function() {
-    const redMessageLocator = ('text="По данному ИНН уже создана карточка НП"');
-    return redMessageLocator;
-}
-
-
-};
-
-export { CreateTaxpayerPage };
+export { CreateTaxpayerPage }
